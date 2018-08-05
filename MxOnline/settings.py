@@ -25,7 +25,8 @@ SECRET_KEY = 'v&75t7e5os&bdv!6_q9zm@)ht+wzi94(ovcju5+g_t%40*$hc6'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+# http://0.0.0.0:21212/
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -79,7 +80,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': "mxonline",
         'USER': 'root',
-        'PASSWORD': "123456",
+        'PASSWORD': "password",
         'HOST': "116.196.98.152"
     }
 }
