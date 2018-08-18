@@ -44,7 +44,7 @@ INSTALLED_APPS = [
     'operation',
     'courses',
     'xadmin',
-    'crispy-forms'
+    'crispy_forms'
 ]
 
 AUTH_USER_MODEL = "users.UserProfile"  # 扩展了默认用户类
