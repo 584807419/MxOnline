@@ -32,7 +32,7 @@ class EmailVerifyRecord(models.Model):
     send_time = models.DateTimeField(default=datetime.now, verbose_name="发送时间")  # now不加括号(),否则刚开始编译就执行了
 
     class Meta:
-        verbose_name = "邮箱验证码"
+        verbose_name = "邮箱验证码 "
         verbose_name_plural = verbose_name
 
 
