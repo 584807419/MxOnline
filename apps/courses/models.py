@@ -9,7 +9,8 @@ class Course(models.Model):
     name = models.CharField(max_length=50, verbose_name="课程名称")
     desc = models.CharField(max_length=300, verbose_name="课程描述")
     detail = models.TextField(verbose_name="课程详情")
-    degree = models.CharField(choices=((1, "初级"), (2, "中级"), (3, "高级")), verbose_name="课程等级", default=1,max_length=50)
+    degree = models.CharField(choices=(("1", "初级"), ("2", "中级"), ("3", "高级")), verbose_name="课程等级", default="1",
+                              max_length=50)
     learn_times = models.IntegerField(default=0, verbose_name="学习时长(分钟)")
     students = models.IntegerField(default=0, verbose_name="学生人数")
     fav_nums = models.IntegerField(default=0, verbose_name="收藏人数")
@@ -21,6 +22,9 @@ class Course(models.Model):
         verbose_name = "课程"
         verbose_name_plural = verbose_name
 
+    def __str__(self):
+        return f"{self.name}"
+
 
 class Lesson(models.Model):
     course = models.ForeignKey(Course, verbose_name="课程", on_delete=models.CASCADE)
@@ -30,6 +34,9 @@ class Lesson(models.Model):
     class Meta:
         verbose_name = "章节"
         verbose_name_plural = verbose_name
+
+    def __str__(self):
+        return f"{self.name}"
 
 
 class Video(models.Model):

@@ -19,6 +19,9 @@ class UserAsk(models.Model):
         verbose_name = "用户咨询"
         verbose_name_plural = verbose_name
 
+    def __str__(self):
+        return f"{self.name}"
+
 
 class CourseComments(models.Model):
     user = models.ForeignKey(UserProfile, on_delete=models.CASCADE, verbose_name="用户")
@@ -30,18 +33,24 @@ class CourseComments(models.Model):
         verbose_name = "课程评论"
         verbose_name_plural = verbose_name
 
+    def __str__(self):
+        return f"{self.comments}"
+
 
 class UserFavorite(models.Model):
     TYPE_CHOICES = ((1, "课程"), (2, "课程机构"), (3, "讲师"))
 
     user = models.ForeignKey(UserProfile, on_delete=models.CASCADE, verbose_name="用户")
     fav_id = models.IntegerField(default=0, verbose_name="不同类型数据的ID")
-    fav_type = models.CharField(choices=TYPE_CHOICES, default=1, verbose_name="收藏类型",max_length=50)
+    fav_type = models.CharField(choices=TYPE_CHOICES, default=1, verbose_name="收藏类型", max_length=50)
     add_time = models.DateTimeField(default=datetime.now, verbose_name="收藏时间")
 
     class Meta:
         verbose_name = "用户收藏"
         verbose_name_plural = verbose_name
+
+    def __str__(self):
+        return f"{self.fav_id}"
 
 
 class UserMessage(models.Model):
@@ -54,6 +63,9 @@ class UserMessage(models.Model):
         verbose_name = "用户消息"
         verbose_name_plural = verbose_name
 
+    def __str__(self):
+        return f"{self.message}"
+
 
 class UserCourse(models.Model):
     user = models.ForeignKey(UserProfile, on_delete=models.CASCADE, verbose_name="用户")
@@ -63,3 +75,6 @@ class UserCourse(models.Model):
     class Meta:
         verbose_name = "用户学习的课程"
         verbose_name_plural = verbose_name
+
+    def __str__(self):
+        return f"{self.course}"
