@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'courses',
     'xadmin',
     'crispy_forms',
+    'captcha'
 ]
 
 AUTH_USER_MODEL = "users.UserProfile"  # 扩展了默认用户类
@@ -132,3 +133,13 @@ USE_TZ = False
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"),)
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+EMAIL_USE_TLS = False
+EMAIL_USE_SSL = True
+EMAIL_HOST = 'smtp.163.com'
+EMAIL_PORT = 465
+EMAIL_HOST_USER = 'python_smtp_test@163.com'
+EMAIL_HOST_PASSWORD = 'zk199245qqq'
+EMAIL_FROM = "zhangkun@zhangkun.com"
