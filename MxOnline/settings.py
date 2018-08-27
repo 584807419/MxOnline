@@ -142,4 +142,4 @@ EMAIL_HOST = 'smtp.163.com'
 EMAIL_PORT = 465
 EMAIL_HOST_USER = 'python_smtp_test@163.com'
 EMAIL_HOST_PASSWORD = 'zk199245qqq'
-EMAIL_FROM = "zhangkun@zhangkun.com"
+EMAIL_FROM = "python_smtp_test@163.com"

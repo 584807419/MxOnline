@@ -5,7 +5,7 @@ from django.db.models import Q
 from django.views.generic.base import View
 from django.contrib.auth.hashers import make_password
 
-from .models import UserProfile
+from .models import UserProfile, EmailVerifyRecord
 from .forms import LoginForm, RegisterForm
 
 from utils.email_send import send_register_email
@@ -34,8 +34,11 @@ class LoginView(View):
             password = request.POST.get("password")
             user = authenticate(username=username, password=password)
             if user:
-                login(request, user)
-                return render(request, "index.html", {})
+                if user.is_active:
+                    login(request, user)
+                    return render(request, "index.html", {})
+                else:
+                    return render(request, 'login.html', {"msg": "用户没有激活"})
             else:
                 return render(request, "login.html", {"msg": "用户名密码错误"})
         else:
@@ -52,28 +55,33 @@ class RegisterView(View):
         if register_form.is_valid():
             user_name = request.POST.get("email")
             pass_word = request.POST.get("password")
+
+            if user_name:
+                if UserProfile.objects.filter(email=user_name):
+                    return render(request, "register.html", {"register_form": register_form, "msg": "邮箱已存在"})
             user_profile = UserProfile()
             user_profile.username = user_name
             user_profile.email = user_name
             user_profile.password = make_password(pass_word)
+            user_profile.is_active = False
             user_profile.save()
 
             send_register_email(user_name, "register")
 
             return render(request, "login.html")
         else:
-            return render(request, "register.html",{"register_form":register_form})
+            return render(request, "register.html", {"register_form": register_form})
 
 
-def login_user(request):
-    if request.method == "POST":
-        username = request.POST.get("username")
-        password = request.POST.get("password")
-        user = authenticate(username=username, password=password)
-        if user:
-            login(request, user)
-            return render(request, "index.html", {})
+class ActiveUserView(View):
+    def get(self, request, active_code):
+        all_records = EmailVerifyRecord.objects.filter(code=active_code)
+        if all_records:
+            for record in all_records:
+                email = record.email
+                user = UserProfile.objects.get(email=email)
+                user.is_active = True
+                user.save()
         else:
-            return render(request, "login.html", {"msg": "用户名密码错误"})
-    elif request.method == "GET":
-        return render(request, "login.html", {})
+            return render(request,"active_fail.html")
+        return render(request, "login.html")
