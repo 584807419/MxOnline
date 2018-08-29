@@ -20,6 +20,7 @@ from django.views.generic import TemplateView
 import xadmin
 
 from users.views import LoginView, RegisterView, ActiveUserView, ForgetPwdView, ResetView, ModifyPwdView
+from organization.views import OrgView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -32,5 +33,6 @@ urlpatterns = [
     path('forget/', ForgetPwdView.as_view(), name="forget_pwd"),
     re_path('reset/(?P<active_code>.*)/', ResetView.as_view(), name="reset_pwd"),
     path('modify_pwd/', ModifyPwdView.as_view(), name="modify_pwd"),
+    path('org_list/', OrgView.as_view(), name="org_list"),  # 课程机构首页
 
 ]
