@@ -55,16 +55,11 @@ class RegisterView(View):
         if register_form.is_valid():
             user_name = request.POST.get("email")
             pass_word = request.POST.get("password")
-
             if user_name:
                 if UserProfile.objects.filter(email=user_name):
                     return render(request, "register.html", {"register_form": register_form, "msg": "邮箱已存在"})
-            user_profile = UserProfile()
-            user_profile.username = user_name
-            user_profile.email = user_name
-            user_profile.password = make_password(pass_word)
-            user_profile.is_active = False
-            user_profile.save()
+            UserProfile.objects.get_or_create(username=user_name, email=user_name, password=make_password(pass_word),
+                                              is_active=False)
 
             send_register_email(user_name, "register")
 
@@ -80,8 +75,7 @@ class ActiveUserView(View):
             for record in all_records:
                 email = record.email
                 user = UserProfile.objects.get(email=email)
-                user.is_active = True
-                user.save()
+                user.update_fields(is_active=True)
         else:
             return render(request, "active_fail.html")
         return render(request, "login.html")
@@ -124,8 +118,7 @@ class ModifyPwdView(View):
             if pwd1 != pwd2:
                 return render(request, "password_reset.html", {"email": email, "msg": "密码不一致"})
             user = UserProfile.objects.get(email=email)
-            user.password = make_password(pwd2)
-            user.save()
+            user.update_fields(password=make_password(pwd2))
             return render(request, 'login.html')
         else:
             return render(request, "password_reset.html",

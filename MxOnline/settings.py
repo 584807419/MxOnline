@@ -47,7 +47,8 @@ INSTALLED_APPS = [
     'courses',
     'xadmin',
     'crispy_forms',
-    'captcha'
+    'captcha',
+    'utils'
 ]
 
 AUTH_USER_MODEL = "users.UserProfile"  # 扩展了默认用户类

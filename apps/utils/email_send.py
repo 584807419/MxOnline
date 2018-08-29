@@ -17,11 +17,7 @@ def random_str(randomlength=8):
 
 def send_register_email(email, send_type="register"):
     code = random_str(5)
-    email_record = EmailVerifyRecord()
-    email_record.code = code
-    email_record.email = email
-    email_record.send_type = send_type
-    email_record.save()
+    EmailVerifyRecord.objects.create(send_type = send_type,email = email,code = code)
 
     email_title = ""
     email_body = ""

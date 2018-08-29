@@ -2,11 +2,11 @@ from datetime import datetime
 
 from django.db import models
 
-
 from django.contrib.auth.models import AbstractUser
+from utils.db_tools import MxModelUpdate
 
 
-class UserProfile(AbstractUser):
+class UserProfile(AbstractUser, MxModelUpdate):
     nick_name = models.CharField(max_length=50, default="", verbose_name="昵称")
     birthday = models.DateField(null=True, blank=True, verbose_name="生日")
     gender = models.CharField(choices=(("male", "男"), ("female", "女")), max_length=6, default="female",
@@ -24,7 +24,7 @@ class UserProfile(AbstractUser):
         return self.username
 
 
-class EmailVerifyRecord(models.Model):
+class EmailVerifyRecord(models.Model, MxModelUpdate):
     code = models.CharField(max_length=40, verbose_name="验证码")
     email = models.EmailField(max_length=50, verbose_name="邮箱")
     send_type = models.CharField(choices=(("register", "注册"), ("forget", "找回密码")), max_length=10)
@@ -38,7 +38,7 @@ class EmailVerifyRecord(models.Model):
         return f'{self.email}__{self.code}'
 
 
-class Banner(models.Model):
+class Banner(models.Model, MxModelUpdate):
     title = models.CharField(max_length=100, verbose_name="标题")
     image = models.ImageField(upload_to="banner/%Y/%m", verbose_name="轮播图")
     url = models.URLField(max_length=200, verbose_name="访问地址")
