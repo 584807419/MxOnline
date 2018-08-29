@@ -19,15 +19,18 @@ from django.views.generic import TemplateView
 
 import xadmin
 
-from users.views import LoginView, RegisterView, ActiveUserView
+from users.views import LoginView, RegisterView, ActiveUserView, ForgetPwdView, ResetView, ModifyPwdView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('xadmin/', xadmin.site.urls),
     path('', TemplateView.as_view(template_name="index.html"), name="index"),
-    # path('login/', login_user, name="login"),
     path('login/', LoginView.as_view(), name="login"),
     path('register/', RegisterView.as_view(), name="register"),
     path('captcha/', include('captcha.urls')),
-    re_path('active/(?P<active_code>.*)/', ActiveUserView.as_view(), name="user_activate")
+    re_path('active/(?P<active_code>.*)/', ActiveUserView.as_view(), name="user_activate"),
+    path('forget/', ForgetPwdView.as_view(), name="forget_pwd"),
+    re_path('reset/(?P<active_code>.*)/', ResetView.as_view(), name="reset_pwd"),
+    path('modify_pwd/', ModifyPwdView.as_view(), name="modify_pwd"),
+
 ]

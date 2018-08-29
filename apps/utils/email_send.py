@@ -31,3 +31,10 @@ def send_register_email(email, send_type="register"):
         send_status = send_mail(email_title, email_body, EMAIL_FROM, [email])
         if send_status:
             pass
+
+    elif send_type == "forget":
+        email_title = "慕雪在线网reset"
+        email_body = "点击链接激活账号: http://127.0.0.1:21212/reset/{0}".format(code)
+        send_status = send_mail(email_title, email_body, EMAIL_FROM, [email])
+        if send_status:
+            pass
