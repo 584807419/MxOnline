@@ -77,6 +77,9 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+
+                'django.template.context_processors.media',
+                # 新版本 replace django.core.context_processors with django.template.context_processors
             ],
         },
     },
@@ -144,3 +147,6 @@ EMAIL_PORT = 465
 EMAIL_HOST_USER = 'python_smtp_test@163.com'
 EMAIL_HOST_PASSWORD = 'zk199245qqq'
 EMAIL_FROM = "python_smtp_test@163.com"
+
+MEDIA_ROOT = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
