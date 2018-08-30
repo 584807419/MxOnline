@@ -48,7 +48,8 @@ INSTALLED_APPS = [
     'xadmin',
     'crispy_forms',
     'captcha',
-    'utils'
+    'utils',
+    'pure_pagination',
 ]
 
 AUTH_USER_MODEL = "users.UserProfile"  # 扩展了默认用户类
@@ -149,3 +150,11 @@ EMAIL_FROM = "python_smtp_test@163.com"
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+
+PAGINATION_SETTINGS = {
+    'PAGE_RANGE_DISPLAYED': 10,
+    'MARGIN_PAGES_DISPLAYED': 2,
+
+    'SHOW_FIRST_PAGE_WHEN_INVALID': True,
+}
