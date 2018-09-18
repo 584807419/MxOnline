@@ -34,9 +34,11 @@
                             <h2>所在地区</h2>
                             <div class="more">更多</div>
                             <div class="cont">
-                                <a href="?ct="><span class="active2">全部</span></a>
+                                <a href="?ct="><span
+                                        class="{% ifequal city_id '' %}active2{% endifequal %}">全部</span></a>
                                 {% for city in all_citys %}
-                                    <a href="?city=1&ct="><span class="">{{ city.name }}</span></a>
+                                    <a href="?city={{ city.id }}"><span
+                                            class="{% ifequal city_id city.id|stringformat:'i' %}activate2{% endifequal %}">{{ city.name }}</span></a>
                                 {% endfor %}
                             </div>
                         </li>
@@ -95,20 +97,20 @@
                             {% if all_orgs.has_previous %}
                                 <li class="long"><a href="?{{ all_orgs.previous_page_number.querystring }}">上一页</a></li>
                             {% endif %}
-                        {% for page in all_orgs.pages %}
-                            {% if page %}
-                                {% ifequal page all_orgs.number %}
-                                    <li class="active"><a href="?{{ page.querystring }}">1</a></li>
+                            {% for page in all_orgs.pages %}
+                                {% if page %}
+                                    {% ifequal page all_orgs.number %}
+                                        <li class="active"><a href="?{{ page.querystring }}">{{ page }}</a></li>
+                                    {% else %}
+                                        <li><a href="?{{ page.querystring }}" class="page">{{ page }}</a></li>
+                                    {% endifequal %}
                                 {% else %}
-                                    <li><a href="?{{ page.querystring }}" class="page">2</a></li>
-                                {% endifequal %}
-                            {% else %}
-                                <li class="none"><a href="">...</a></li>
+                                    <li class="none"><a href="">...</a></li>
+                                {% endif %}
+                            {% endfor %}
+                            {% if all_orgs.has_next %}
+                                <li class="long"><a href="?{{ all_orgs.next_page_number.querystring }}">下一页</a></li>
                             {% endif %}
-                        {% endfor %}
-                        {% if all_orgs.has_next %}
-                            <li class="long"><a href="?{{ all_orgs.next_page_number.querystring }}">下一页</a></li>
-                        {% endif %}
                         </ul>
                     </div>
                 </div>

@@ -12,6 +12,12 @@ class OrgView(View):
     def get(self, request):
         all_orgs = CourseOrg.objects.all()
         all_citys = CityDict.objects.all()
+        city_id = request.GET.get("city")
+        if city_id:
+            all_orgs = all_orgs.filter(city_id=int(city_id))
+        category = request.GET.get("ct","")
+        if category:
+            all_orgs = all_orgs.filter(category=category)
         org_nums = all_orgs.count()
         try:
             page = request.GET.get('page', 1)
@@ -20,4 +26,5 @@ class OrgView(View):
         page = str(page)
         p = Paginator(all_orgs, 5, request=request)
         orgs = p.page(page)
-        return render(request, "org-list.html", {"all_orgs": orgs, "all_citys": all_citys, "org_nums": org_nums})
+        return render(request, "org-list.html",
+                      {"all_orgs": orgs, "all_citys": all_citys, "org_nums": org_nums, "city_id": city_id})
