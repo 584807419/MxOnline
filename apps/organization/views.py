@@ -16,15 +16,22 @@ class OrgView(View):
         hot_orgs = all_orgs.order_by("-click_nums")[:3]
 
         # 取出筛选的城市
-        city_id = request.GET.get("city")
+        city_id = request.GET.get("city") if request.GET.get("city") else ""
         if city_id:
             all_orgs = all_orgs.filter(city_id=int(city_id))
         # 类别筛选
         category = request.GET.get("ct", "")
         if category:
             all_orgs = all_orgs.filter(category=category)
-        org_nums = all_orgs.count()
+        # 人数和课程数排序
+        sort = request.GET.get('sort', "")
+        if sort:
+            if sort == "students":
+                all_orgs = all_orgs.order_by("-students")
+            elif sort == "courses":
+                all_orgs = all_orgs.order_by("-course_nums")
 
+        org_nums = all_orgs.count()
         try:
             page = request.GET.get('page', 1)
         except PageNotAnInteger:
@@ -38,5 +45,6 @@ class OrgView(View):
                        "org_nums": org_nums,
                        "city_id": city_id,
                        "category": category,
-                       "hot_orgs": hot_orgs, },
+                       "hot_orgs": hot_orgs,
+                       "sort": sort},
                       )
