@@ -12,6 +12,8 @@ class OrgView(View):
     def get(self, request):
         all_orgs = CourseOrg.objects.all()
         all_citys = CityDict.objects.all()
+        # 热门机构
+        hot_orgs = all_orgs.order_by("-click_nums")[:3]
 
         # 取出筛选的城市
         city_id = request.GET.get("city")
@@ -22,6 +24,7 @@ class OrgView(View):
         if category:
             all_orgs = all_orgs.filter(category=category)
         org_nums = all_orgs.count()
+
         try:
             page = request.GET.get('page', 1)
         except PageNotAnInteger:
@@ -34,4 +37,6 @@ class OrgView(View):
                        "all_citys": all_citys,
                        "org_nums": org_nums,
                        "city_id": city_id,
-                       "category": category})
+                       "category": category,
+                       "hot_orgs": hot_orgs, },
+                      )
