@@ -20,13 +20,13 @@
                         <li>
                             <h2>机构类别</h2>
                             <div class="cont">
-                                <a href="?city="><span class="active2">全部</span></a>
+                                <a href="?city="><span class="{% ifequal category '' %}active2{% endifequal %}">全部</span></a>
 
-                                <a href="?ct=pxjg&city="><span class="">培训机构</span></a>
+                                <a href="?ct=pxjg"><span class="{% ifequal category 'pxjg' %}active2{% endifequal %}">培训机构</span></a>
 
-                                <a href="?ct=gx&city="><span class="">高校</span></a>
+                                <a href="?ct=gx"><span class="{% ifequal category 'gx' %}active2{% endifequal %}">高校</span></a>
 
-                                <a href="?ct=gr&city="><span class="">个人</span></a>
+                                <a href="?ct=gr"><span class="{% ifequal category 'gr' %}active2{% endifequal %}">个人</span></a>
 
                             </div>
                         </li>
@@ -34,11 +34,9 @@
                             <h2>所在地区</h2>
                             <div class="more">更多</div>
                             <div class="cont">
-                                <a href="?ct="><span
-                                        class="{% ifequal city_id '' %}active2{% endifequal %}">全部</span></a>
+                                <a href="?ct="><span class="{% ifequal city_id '' %}active2{% endifequal %}">全部</span></a>
                                 {% for city in all_citys %}
-                                    <a href="?city={{ city.id }}"><span
-                                            class="{% ifequal city_id city.id|stringformat:'i' %}activate2{% endifequal %}">{{ city.name }}</span></a>
+                                    <a href="?city={{ city.id }}"><span class="{% ifequal city_id city.id|stringformat:'i' %}active2{% endifequal %}">{{ city.name }}</span></a>
                                 {% endfor %}
                             </div>
                         </li>
@@ -65,7 +63,7 @@
                                 <dd>
                                     <div class="clearfix">
                                         <a href="org-detail-homepage.html">
-                                            <h1>慕课网</h1>
+                                            <h1>{{ course_org.name }}</h1>
                                             <div class="pic fl">
 
                                                 <img src="{% static 'images/authentication.png' %}"/>
