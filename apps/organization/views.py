@@ -1,5 +1,7 @@
 from django.shortcuts import render
 from django.views.generic import View
+from django.http import HttpResponse
+
 from .models import CourseOrg, CityDict
 from .forms import UserAskForm
 
@@ -50,9 +52,12 @@ class OrgView(View):
                        "sort": sort},
                       )
 
-class userAskView(View):
+class AddUserAskView(View):
     def post(self, request):
         userask_form = UserAskForm(request.POST)
         if userask_form.is_valid():
             # 异常方便的就存进来了
             user_ask = userask_form.save(commit=True)
+            return HttpResponse('{"status":"success"}',content_type='application/json')
+        else:
+            return HttpResponse('{"status":"error","msg":{0}}'.format("添加失败"),content_type='application/json')

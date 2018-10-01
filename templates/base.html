@@ -128,7 +128,7 @@
                     if(data.status == 'success'){
                         $('#jsStayForm')[0].reset();
                         alert("提交成功")
-                    }else if(data.status == 'fail'){
+                    }else if(data.status == 'error'){
                         $('#jsCompanyTips').html(data.msg)
                     }
                 },
