@@ -5,7 +5,7 @@
 	<meta charset="UTF-8">
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1" >
-	<title>    {% block title %} 机构首页 | mtianyan慕课小站{% endblock %}</title>
+	<title>    {% block title %} 机构首页     {% endblock %}</title>
 	<link rel="stylesheet" type="text/css" href="{% static 'css/reset.css' %}">
 	<link rel="stylesheet" type="text/css" href="{% static 'css/animate.css' %}">
 	<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
@@ -38,12 +38,12 @@
 	                                </dd>
                                 </dl>
                                 <div class="btn">
-	                                <a class="personcenter fl" href="{% url 'users:user_info' %}">进入个人中心</a>
-	                                <a class="fr" href="{% url 'logout' %}">退出</a>
+{#	                                <a class="personcenter fl" href="{% url 'users:user_info' %}">进入个人中心</a>#}
+{#	                                <a class="fr" href="{% url 'logout' %}">退出</a>#}
                                 </div>
                             </div>
                         </div>
-              <a href="{% url 'users:my_message' %}">
+{#              <a href="{% url 'users:my_message' %}">#}
                             <div class="msg-num"><span id="MsgNum">{{ request.user.unread_nums }}</span></div>
                         </a>
             </div>
@@ -112,8 +112,7 @@
                 <li class="{% ifequal current_page "teacher" %}active2{% endifequal %}"><a href="{% url 'org:org_teacher' course_org.id %}">机构讲师</a></li>
 			</ul>
 		</div>
-
-        {% block right_form %}
+{% block right_form %}
 
 {% endblock %}
 
@@ -154,7 +153,7 @@ function add_fav(current_elem, fav_id, fav_type){
             xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
         },
         success: function(data) {
-            if(data.status == 'fail'){
+            if(data.status == 'error'){
                 if(data.msg == '用户未登录'){
                     window.location.href="{% url 'login' %}?next={{ request.path }}";
                 }else{
