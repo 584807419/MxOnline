@@ -10,7 +10,16 @@ from pure_pagination import Paginator, EmptyPage, PageNotAnInteger
 class CourseListView(View):
     @staticmethod
     def get(request):
-        all_courses = Course.objects.all()
+        all_courses = Course.objects.all().order_by("-add_time")
+        # 热门
+        hot_courses = Course.objects.all().order_by("-click_nums")[:3]
+        #排序
+        sort = request.GET.get("sort","")
+        if sort:
+            if sort == "students":
+                all_courses = all_courses.order_by("-students")
+            elif sort == "hot":
+                all_courses = all_courses.order_by("-click_nums")
 
         #对课程进行分页
         try:
@@ -23,8 +32,8 @@ class CourseListView(View):
 
         return render(request, "course-list.html", {
             "all_course": courses,
-            # "sort": sort,
-            # "hot_courses": hot_courses,
+            "sort": sort,
+            "hot_courses": hot_courses,
             # "search_keywords": search_keywords
         })
 
