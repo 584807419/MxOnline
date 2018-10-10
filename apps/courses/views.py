@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.views.generic import View
 from django.http import HttpResponse
 
-from .models import Course
+from .models import Course, CourseResource
 from operation.models import UserFavorite, CourseComments, UserCourse
 
 from pure_pagination import Paginator, EmptyPage, PageNotAnInteger
@@ -70,13 +70,13 @@ class CourseDetailView(View):
 
 class CourseInfoView(View):
     @staticmethod
-    def get(request):
-        all_courses = Course.objects.all()
-        return render(request, "course-list.html", {
-            "all_course": all_courses,
-            # "sort": sort,
-            # "hot_courses": hot_courses,
-            # "search_keywords": search_keywords
+    def get(request, course_id):
+        course = Course.objects.get(id=int(course_id))
+        all_resources = CourseResource.objects.filter(course=course)
+        return render(request, "course-video.html", {
+            "course": course,
+            "all_resources": all_resources,
+            # "relate_courses":relate_courses,
         })
 
 
@@ -84,11 +84,10 @@ class CommentsView(View):
     @staticmethod
     def get(request):
         all_courses = Course.objects.all()
-        return render(request, "course-list.html", {
-            "all_course": all_courses,
-            # "sort": sort,
-            # "hot_courses": hot_courses,
-            # "search_keywords": search_keywords
+        return render(request, "course-video.html", {
+            "course": course,
+            "all_resources": all_resources,
+            "relate_courses": relate_courses,
         })
 
 

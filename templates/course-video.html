@@ -72,14 +72,14 @@
                 </div>
 
                 <div class="mod-chapters">
-                    {% for lesson in course.lesson_set.get_queryset %}
+                    {% for lesson in course.get_course_lesson %}
                          <div class="chapter chapter-active" >
                         <h3>
                             <strong><i class="state-expand"></i>{{ lesson.name }}</strong>
                         </h3>
                         <ul class="video">
 
-                            {% for video in lesson.video_set.get_queryset  %}
+                            {% for video in lesson.get_lesson_video  %}
                             <li>
                                 <a target="_blank" href='{% url 'course:video_play' video.id %}' class="J-media-item studyvideo">{{ video.name }} ({{ video.learn_times }})
                                     <i class="study-state"></i>
