@@ -6,6 +6,7 @@ from .models import Course, CourseResource
 from operation.models import UserFavorite, CourseComments, UserCourse
 
 from pure_pagination import Paginator, EmptyPage, PageNotAnInteger
+from utils.mixin_utils import LoginRequiredMixin
 
 
 class CourseListView(View):
@@ -68,22 +69,17 @@ class CourseDetailView(View):
         })
 
 
-class CourseInfoView(View):
+class CourseInfoView(LoginRequiredMixin, View):
     @staticmethod
     def get(request, course_id):
         course = Course.objects.get(id=int(course_id))
+        user_courses = UserCourse.objects.filter(course=course)
+        user_ids = [i.get("user") for i in UserCourse.objects.filter(course=course).values("user")]
+        all_user_courses = [i.get("course") for i in UserCourse.objects.filter(user_id__in=user_ids).values("course")]
+        all_user_courses = list(set(all_user_courses))
+        all_user_courses.remove(int(course_id))
+        relate_courses = Course.objects.filter(id__in=all_user_courses).order_by("-click_nums")[:5]
         all_resources = CourseResource.objects.filter(course=course)
-        return render(request, "course-video.html", {
-            "course": course,
-            "all_resources": all_resources,
-            # "relate_courses":relate_courses,
-        })
-
-
-class CommentsView(View):
-    @staticmethod
-    def get(request):
-        all_courses = Course.objects.all()
         return render(request, "course-video.html", {
             "course": course,
             "all_resources": all_resources,
@@ -91,16 +87,34 @@ class CommentsView(View):
         })
 
 
+class CommentsView(LoginRequiredMixin, View):
+    @staticmethod
+    def get(request, course_id):
+        course = Course.objects.get(id=int(course_id))
+        all_resources = CourseResource.objects.filter(course=course)
+        all_comments = CourseComments.objects.filter(course=course).order_by("-pk")
+        return render(request, "course-comment.html", {
+            "course": course,
+            "all_resources": all_resources,
+            "all_comments": all_comments,
+        })
+
+
 class AddCommentsView(View):
     @staticmethod
-    def get(request):
-        all_courses = Course.objects.all()
-        return render(request, "course-list.html", {
-            "all_course": all_courses,
-            # "sort": sort,
-            # "hot_courses": hot_courses,
-            # "search_keywords": search_keywords
-        })
+    def post(request):
+        if not request.user.is_authenticated:
+            return HttpResponse('{"status":"error","msg":"用户未登录"}', content_type='application/json')
+        course_id = request.POST.get("course_id", 0)
+        comments = request.POST.get("comments", "")
+        if int(course_id) > 0 and comments:
+            CourseComments.objects.create(course=Course.objects.get(id=int(course_id)),
+                                          comments=comments,
+                                          user=request.user
+                                          )
+            return HttpResponse('{"status":"success","msg":"添加成功"}', content_type='application/json')
+        else:
+            return HttpResponse('{"status":"error","msg":"添加失败"}', content_type='application/json')
 
 
 class VideoPlayView(View):
