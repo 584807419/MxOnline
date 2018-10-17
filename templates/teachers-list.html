@@ -59,6 +59,8 @@
 							<li>就职公司：<span>{{ teacher.work_company }}&nbsp;</span></li>
 							<li>年龄：<span>{{ teacher.age }}</span></li>
 							<li>教学特点：<span>{{ teacher.points }}</span></li>
+                            <li>被收藏：<span>{{ teacher.fav_nums }}</span></li>
+                            <li>点击量：<span>{{ teacher.click_nums }}</span></li>
 						</ul>
 					</dd>
                     <a class="buy buyservice" href="{% url 'org:teacher_detail' teacher.id %}"><br/>查看<br/>详情</a>
