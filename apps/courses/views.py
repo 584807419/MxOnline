@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.views.generic import View
 from django.http import HttpResponse
 
-from .models import Course, CourseResource
+from .models import Course, CourseResource,Video
 from operation.models import UserFavorite, CourseComments, UserCourse
 
 from pure_pagination import Paginator, EmptyPage, PageNotAnInteger
@@ -75,7 +75,7 @@ class CourseInfoView(LoginRequiredMixin, View):
         course = Course.objects.get(id=int(course_id))
         user_courses = UserCourse.objects.filter(course=course).filter(user=request.user)
         if not user_courses:
-            UserCourse.objects.create(user=request.user,course=course)
+            UserCourse.objects.create(user=request.user, course=course)
         user_ids = [i.get("user") for i in UserCourse.objects.filter(course=course).values("user")]
         all_user_courses = [i.get("course") for i in UserCourse.objects.filter(user_id__in=user_ids).values("course")]
         all_user_courses = list(set(all_user_courses))
@@ -121,11 +121,25 @@ class AddCommentsView(View):
 
 class VideoPlayView(View):
     @staticmethod
-    def get(request):
-        all_courses = Course.objects.all()
-        return render(request, "course-list.html", {
-            "all_course": all_courses,
-            # "sort": sort,
-            # "hot_courses": hot_courses,
-            # "search_keywords": search_keywords
+    def get(request,video_id):
+        video = Video.objects.filter(id=int(video_id)).first()
+        course = video.lesson.course
+        course.students += 1
+        course.save()
+
+        # course = Course.objects.get(id=int(course_id))
+        user_courses = UserCourse.objects.filter(course=course).filter(user=request.user)
+        if not user_courses:
+            UserCourse.objects.create(user=request.user,course=course)
+        user_ids = [i.get("user") for i in UserCourse.objects.filter(course=course).values("user")]
+        all_user_courses = [i.get("course") for i in UserCourse.objects.filter(user_id__in=user_ids).values("course")]
+        all_user_courses = list(set(all_user_courses))
+        all_user_courses.remove(int(course.pk))
+        relate_courses = Course.objects.filter(id__in=all_user_courses).order_by("-click_nums")[:5]
+        all_resources = CourseResource.objects.filter(course=course)
+        return render(request, "course-play.html", {
+            "course": course,
+            "all_resources": all_resources,
+            "relate_courses": relate_courses,
+            "video":video
         })
