@@ -73,7 +73,9 @@ class CourseInfoView(LoginRequiredMixin, View):
     @staticmethod
     def get(request, course_id):
         course = Course.objects.get(id=int(course_id))
-        user_courses = UserCourse.objects.filter(course=course)
+        user_courses = UserCourse.objects.filter(course=course).filter(user=request.user)
+        if not user_courses:
+            UserCourse.objects.create(user=request.user,course=course)
         user_ids = [i.get("user") for i in UserCourse.objects.filter(course=course).values("user")]
         all_user_courses = [i.get("course") for i in UserCourse.objects.filter(user_id__in=user_ids).values("course")]
         all_user_courses = list(set(all_user_courses))
