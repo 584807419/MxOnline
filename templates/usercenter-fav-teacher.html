@@ -1,5 +1,5 @@
 {% extends 'usercenter-base.html' %}
-{% block title %} 我的收藏 | mtianyan慕课小站{% endblock %}
+{% block title %} 我的收藏 {% endblock %}
 {% load staticfiles %}
 {% block custom_bread %}
         <section>
@@ -45,7 +45,7 @@
                                     </a>
                                 </h1>
                                 <ul class="cont clearfix">
-                                    <li class="time">工作年限：<span>{{ teacher.work_years }}</span></li>
+                                    <li class="time">工作年限：<span>{{ teacher.work_year }}</span></li>
                                     <li class="c7">课程数：<span>{{ teacher.course_set.count }}</span></li>
                                 </ul>
                                 <ul class="cont clearfix">

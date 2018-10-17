@@ -41,6 +41,7 @@ urlpatterns = [
 
     # 课程相关url配置
     re_path('course/', include(('courses.urls', 'courses'), namespace="course")),
+    re_path('teacher/', include(('organization.urls', 'organization'), namespace="teacher")),
 
     re_path(r'media/(?P<path>.*)', serve, {"document_root": MEDIA_ROOT})  # 配置上传文件的访问处理函数
 
