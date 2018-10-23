@@ -211,6 +211,7 @@ class TeacherListView(View):
             "sort": sort,
             "rank_teachers": rank_teacher,
             "search_keywords": search_keywords,
+            "current_nav": "teacher"
         })
 
 
