@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.views.generic import View
 from django.http import HttpResponse
+from django.db.models import Q
 
 from .models import Course, CourseResource,Video
 from operation.models import UserFavorite, CourseComments, UserCourse
@@ -15,6 +16,10 @@ class CourseListView(View):
         all_courses = Course.objects.all().order_by("-add_time")
         # 热门
         hot_courses = Course.objects.all().order_by("-click_nums")[:3]
+        # 搜索
+        search_keywords = request.GET.get('keywords', "")
+        if search_keywords:
+            all_courses = all_courses.filter(Q(name__icontains=search_keywords) | Q(desc__icontains=search_keywords) | Q(detail__icontains=search_keywords))
         # 排序
         sort = request.GET.get("sort", "")
         if sort:
@@ -25,7 +30,7 @@ class CourseListView(View):
 
         # 对课程进行分页
         try:
-            page = request.GET.get("page", 1)
+            page = request.GET  .get("page", 1)
         except PageNotAnInteger:
             page = 1
 

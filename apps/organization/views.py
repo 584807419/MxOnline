@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.views.generic import View
 from django.http import HttpResponse
+from django.db.models import Q
 
 from .models import CourseOrg, CityDict, Teacher
 from operation.models import UserFavorite
@@ -18,6 +19,11 @@ class OrgView(View):
         all_citys = CityDict.objects.all()
         # 热门机构
         hot_orgs = all_orgs.order_by("-click_nums")[:3]
+
+        # 搜索
+        search_keywords = request.GET.get('keywords', "")
+        if search_keywords:
+            all_orgs = all_orgs.filter(Q(name__icontains=search_keywords) | Q(desc__icontains=search_keywords))
 
         # 取出筛选的城市
         city_id = request.GET.get("city") if request.GET.get("city") else ""
@@ -97,6 +103,7 @@ class OrgCourseView(View):
         course_org = CourseOrg.objects.get(id=int(org_id))
         # Course 有 course_org 外键,可以这样取外键对应的所有course
         all_courses = course_org.course_set.all()
+
 
         has_fav = False
         if request.user.is_authenticated:
