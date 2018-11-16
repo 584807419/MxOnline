@@ -6,31 +6,36 @@ from users.models import EmailVerifyRecord
 
 
 def random_str(randomlength=8):
-    str = ''
+    _str = ''
     chars = 'AaBbCcDdEeFfGgHh'
     length = len(chars) - 1
     random = Random()
     for i in range(randomlength):
-        str += chars[random.randint(0, length)]
-    return str
+        _str += chars[random.randint(0, length)]
+    return _str
 
 
 def send_register_email(email, send_type="register"):
     code = random_str(5)
-    EmailVerifyRecord.objects.create(send_type = send_type,email = email,code = code)
+    EmailVerifyRecord.objects.create(send_type=send_type, email=email, code=code)
 
-    email_title = ""
-    email_body = ""
     if send_type == "register":
         email_title = "慕雪在线网注册激活链接"
-        email_body = "点击链接激活账号: http://127.0.0.1:21212/active/{0}".format(code)
+        email_body = f"点击链接激活账号: http://127.0.0.1:21212/active/{code}"
         send_status = send_mail(email_title, email_body, EMAIL_FROM, [email])
         if send_status:
             pass
 
     elif send_type == "forget":
         email_title = "慕雪在线网reset"
-        email_body = "点击链接激活账号: http://127.0.0.1:21212/reset/{0}".format(code)
+        email_body = f"点击链接激活账号: http://127.0.0.1:21212/reset/{code}"
+        send_status = send_mail(email_title, email_body, EMAIL_FROM, [email])
+        if send_status:
+            pass
+
+    elif send_type == "update_email":
+        email_title = "慕雪在线网修改邮箱验证码"
+        email_body = f"您的邮箱验证码为 : {code}"
         send_status = send_mail(email_title, email_body, EMAIL_FROM, [email])
         if send_status:
             pass

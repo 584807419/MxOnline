@@ -27,7 +27,7 @@ class UserProfile(AbstractUser, MxModelUpdate):
 class EmailVerifyRecord(models.Model, MxModelUpdate):
     code = models.CharField(max_length=40, verbose_name="验证码")
     email = models.EmailField(max_length=50, verbose_name="邮箱")
-    send_type = models.CharField(choices=(("register", "注册"), ("forget", "找回密码")), max_length=10)
+    send_type = models.CharField(choices=(("register", "注册"), ("forget", "找回密码"), ("update_email", "修改邮箱")), max_length=30)
     send_time = models.DateTimeField(default=datetime.now, verbose_name="发送时间")  # now不加括号(),否则刚开始编译就执行了
 
     class Meta:

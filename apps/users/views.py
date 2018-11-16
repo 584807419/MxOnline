@@ -137,6 +137,7 @@ class UserInfoView(LoginRequiredMixin, View):
 
 class UploadImageView(LoginRequiredMixin, View):
     """用户修改头像"""
+
     def post(self, request):
         image_form = UploadImageForm(request.POST, request.FILES, instance=request.user)
         if image_form.is_valid():
@@ -146,7 +147,7 @@ class UploadImageView(LoginRequiredMixin, View):
             return HttpResponse('{"status":"error"}', content_type="application/json")
 
 
-class UpdatePwdView(View):
+class UpdatePwdView(LoginRequiredMixin, View):
     def post(self, request):
         modify_form = ModifyPwdForm(request.POST)
         if modify_form.is_valid():
@@ -160,3 +161,24 @@ class UpdatePwdView(View):
         else:
             return HttpResponse(json.dumps(modify_form.errors), content_type="application/json")
 
+
+class SendEmailCodeView(LoginRequiredMixin, View):
+    def get(self, request):
+        email = request.GET.get('email', "")
+        if UserProfile.objects.filter(email=email):
+            return HttpResponse('{"status":"error", "msg":"邮箱已经被使用"}',content_type="application/json")
+        send_register_email(email, "update_email")
+        return HttpResponse('{"status":"success"}', content_type="application/json")
+
+
+class UpdateEmailView(LoginRequiredMixin, View):
+    def post(self, request):
+        email = request.POST.get("email", "")
+        code = request.POST.get("code", "")
+        existed_recored = EmailVerifyRecord.objects.filter(email=email,code=code,type="update_email")
+        if existed_recored:
+            request.user.email = email
+            request.user.save()
+            return HttpResponse('{"status":"success"}', content_type="application/json")
+        else:
+            return HttpResponse('{"status":"error","msg":"验证码错误"}', content_type="application/json")
