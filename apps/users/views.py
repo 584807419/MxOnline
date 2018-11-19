@@ -166,7 +166,7 @@ class SendEmailCodeView(LoginRequiredMixin, View):
     def get(self, request):
         email = request.GET.get('email', "")
         if UserProfile.objects.filter(email=email):
-            return HttpResponse('{"status":"error", "msg":"邮箱已经被使用"}',content_type="application/json")
+            return HttpResponse('{"status":"error", "msg":"邮箱已经被使用"}', content_type="application/json")
         send_register_email(email, "update_email")
         return HttpResponse('{"status":"success"}', content_type="application/json")
 
@@ -175,7 +175,7 @@ class UpdateEmailView(LoginRequiredMixin, View):
     def post(self, request):
         email = request.POST.get("email", "")
         code = request.POST.get("code", "")
-        existed_recored = EmailVerifyRecord.objects.filter(email=email,code=code,type="update_email")
+        existed_recored = EmailVerifyRecord.objects.filter(email=email, code=code, send_type="update_email")
         if existed_recored:
             request.user.email = email
             request.user.save()
