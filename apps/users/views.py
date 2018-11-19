@@ -9,7 +9,7 @@ from django.contrib.auth.hashers import make_password
 from django.http import HttpResponse
 
 from .models import UserProfile, EmailVerifyRecord
-from .forms import LoginForm, RegisterForm, ForgetForm, ModifyPwdForm, UploadImageForm
+from .forms import LoginForm, RegisterForm, ForgetForm, ModifyPwdForm, UploadImageForm, UserInfoForm
 
 from utils.email_send import send_register_email
 from utils.mixin_utils import LoginRequiredMixin
@@ -133,6 +133,16 @@ class UserInfoView(LoginRequiredMixin, View):
     def get(self, request):
         """用户个人信息"""
         return render(request, 'usercenter-info.html', {})
+
+    def post(self, request):
+        # 使用from的时候要注意,如果不指定instance,那么save的时候会认为新增一个,而不是修改原有的
+        user_info_form = UserInfoForm(request.POST, instance=request.user)
+        if user_info_form.is_valid():
+            user_info_form.save()
+            return HttpResponse('{"status":"success"}', content_type="application/json")
+        else:
+            return HttpResponse(json.dumps(user_info_form.errors), content_type="application/json")
+
 
 
 class UploadImageView(LoginRequiredMixin, View):
