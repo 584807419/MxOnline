@@ -24,7 +24,7 @@
 			<div class="companycenter">
 				<div class="group_list brief">
 
-                    {% for user_course in user_courses %}
+{% for user_course in user_courses %}
                     <div class="module1_5 box">
                             <a href="{% url 'course:course_detail' user_course.course.id %}">
                                 <img width="214" height="190" class="scrollLoading" src="{{ MEDIA_URL }}{{ user_course.course.image }}"/>

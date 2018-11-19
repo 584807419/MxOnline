@@ -14,6 +14,8 @@ from .forms import LoginForm, RegisterForm, ForgetForm, ModifyPwdForm, UploadIma
 from utils.email_send import send_register_email
 from utils.mixin_utils import LoginRequiredMixin
 
+from operation.models import UserCourse
+
 
 class CustomBackend(ModelBackend):
     def authenticate(self, request, username=None, password=None, **kwargs):
@@ -144,7 +146,6 @@ class UserInfoView(LoginRequiredMixin, View):
             return HttpResponse(json.dumps(user_info_form.errors), content_type="application/json")
 
 
-
 class UploadImageView(LoginRequiredMixin, View):
     """用户修改头像"""
 
@@ -192,3 +193,9 @@ class UpdateEmailView(LoginRequiredMixin, View):
             return HttpResponse('{"status":"success"}', content_type="application/json")
         else:
             return HttpResponse('{"status":"error","msg":"验证码错误"}', content_type="application/json")
+
+
+class MyCourseView(LoginRequiredMixin, View):
+    def get(self, request):
+        user_courses = UserCourse.objects.filter(user=request.user)
+        return render(request, 'usercenter-mycourse.html', {"user_courses": user_courses})
