@@ -2,7 +2,7 @@ from courses.views import CourseListView, CourseDetailView, CourseInfoView, Comm
 from django.urls import path, re_path
 
 from .views import UserInfoView, UploadImageView, UpdatePwdView, SendEmailCodeView, UpdateEmailView, MyCourseView, \
-    MyFavOrgView, MyFavTeacherView, MyFavCourseView
+    MyFavOrgView, MyFavTeacherView, MyFavCourseView, MyMessageView
 
 app_name = "users"
 urlpatterns = [
@@ -15,8 +15,9 @@ urlpatterns = [
     path('mycourse/', MyCourseView.as_view(), name="mycourse"),
     path('myfav/org/', MyFavOrgView.as_view(), name="myfav_org"),
 
-    path('imag/upoadw/', UserInfoView.as_view(), name="my_message"),
+
     path('myfav/teacher/', MyFavTeacherView.as_view(), name="myfav_teacher"),
     path('myfav/course/', MyFavCourseView.as_view(), name="myfav_course"),
+    path('mymessage/', MyMessageView.as_view(), name="my_message"),
 
 ]

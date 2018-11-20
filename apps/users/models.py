@@ -23,6 +23,10 @@ class UserProfile(AbstractUser, MxModelUpdate):
     def __str__(self):
         return self.username
 
+    def unread_nums(self):
+        from operation.models import UserMessage
+        return UserMessage.objects.filter(user=self.id).count()
+
 
 class EmailVerifyRecord(models.Model, MxModelUpdate):
     code = models.CharField(max_length=40, verbose_name="验证码")

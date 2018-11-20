@@ -7,6 +7,7 @@ from django.db.models import Q
 from django.views.generic.base import View
 from django.contrib.auth.hashers import make_password
 from django.http import HttpResponse
+from pure_pagination import Paginator
 
 from .models import UserProfile, EmailVerifyRecord
 from .forms import LoginForm, RegisterForm, ForgetForm, ModifyPwdForm, UploadImageForm, UserInfoForm
@@ -14,7 +15,7 @@ from .forms import LoginForm, RegisterForm, ForgetForm, ModifyPwdForm, UploadIma
 from utils.email_send import send_register_email
 from utils.mixin_utils import LoginRequiredMixin
 
-from operation.models import UserCourse, UserFavorite
+from operation.models import UserCourse, UserFavorite, UserMessage
 from organization.models import CourseOrg, Teacher
 from courses.models import Course
 
@@ -70,6 +71,8 @@ class RegisterView(View):
                                               is_active=False)
 
             send_register_email(user_name, "register")
+
+            UserMessage.objects.create(user=request.user, message="welcome")
 
             return render(request, "login.html")
         else:
@@ -234,3 +237,12 @@ class MyFavCourseView(LoginRequiredMixin, View):
             org = Course.objects.get(id=org_id)
             org_list.append(org)
         return render(request, 'usercenter-fav-course.html', {"course_list": org_list})
+
+
+class MyMessageView(LoginRequiredMixin, View):
+    def get(self, request):
+        all_message = UserMessage.objects.filter(user=request.user.pk)
+        page = request.GET.get("page", 1)
+        p = Paginator(all_message, 5, request=request)
+        messages = p.page(page)
+        return render(request, 'usercenter-message.html', {"messages": messages})
