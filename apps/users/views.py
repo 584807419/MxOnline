@@ -1,12 +1,13 @@
 import json
 
 from django.shortcuts import render
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.backends import ModelBackend
+from django.contrib.auth.hashers import make_password
 from django.db.models import Q
 from django.views.generic.base import View
-from django.contrib.auth.hashers import make_password
-from django.http import HttpResponse
+from django.urls.base import reverse
+from django.http import HttpResponse, HttpResponseRedirect
 from pure_pagination import Paginator
 
 from .models import UserProfile, EmailVerifyRecord
@@ -52,6 +53,12 @@ class LoginView(View):
                 return render(request, "login.html", {"msg": "用户名密码错误"})
         else:
             return render(request, "login.html", {"login_form": login_form})
+
+
+class LogoutView(LoginRequiredMixin, View):
+    def get(self, request):
+        logout(request)
+        return HttpResponseRedirect(reverse("index"))
 
 
 class RegisterView(View):
