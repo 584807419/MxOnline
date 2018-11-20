@@ -16,6 +16,7 @@ from utils.mixin_utils import LoginRequiredMixin
 
 from operation.models import UserCourse, UserFavorite
 from organization.models import CourseOrg, Teacher
+from courses.models import Course
 
 
 class CustomBackend(ModelBackend):
@@ -222,3 +223,14 @@ class MyFavTeacherView(LoginRequiredMixin, View):
             org = Teacher.objects.get(id=org_id)
             org_list.append(org)
         return render(request, 'usercenter-fav-teacher.html', {"teacher_list": org_list})
+
+
+class MyFavCourseView(LoginRequiredMixin, View):
+    def get(self, request):
+        org_list = []
+        fav_orgs = UserFavorite.objects.filter(user=request.user, fav_type=1)
+        for fav_org in fav_orgs:
+            org_id = fav_org.fav_id
+            org = Course.objects.get(id=org_id)
+            org_list.append(org)
+        return render(request, 'usercenter-fav-course.html', {"course_list": org_list})
