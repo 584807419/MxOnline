@@ -3,7 +3,7 @@ from django.views.generic import View
 from django.http import HttpResponse
 from django.db.models import Q
 
-from .models import Course, CourseResource,Video
+from .models import Course, CourseResource, Video
 from operation.models import UserFavorite, CourseComments, UserCourse
 
 from pure_pagination import Paginator, EmptyPage, PageNotAnInteger
@@ -19,7 +19,9 @@ class CourseListView(View):
         # 搜索
         search_keywords = request.GET.get('keywords', "")
         if search_keywords:
-            all_courses = all_courses.filter(Q(name__icontains=search_keywords) | Q(desc__icontains=search_keywords) | Q(detail__icontains=search_keywords))
+            all_courses = all_courses.filter(
+                Q(name__icontains=search_keywords) | Q(desc__icontains=search_keywords) | Q(
+                    detail__icontains=search_keywords))
         # 排序
         sort = request.GET.get("sort", "")
         if sort:
@@ -30,7 +32,7 @@ class CourseListView(View):
 
         # 对课程进行分页
         try:
-            page = request.GET  .get("page", 1)
+            page = request.GET.get("page", 1)
         except PageNotAnInteger:
             page = 1
 
@@ -78,6 +80,8 @@ class CourseInfoView(LoginRequiredMixin, View):
     @staticmethod
     def get(request, course_id):
         course = Course.objects.get(id=int(course_id))
+        course.students +=1
+        course.save()
         user_courses = UserCourse.objects.filter(course=course).filter(user=request.user)
         if not user_courses:
             UserCourse.objects.create(user=request.user, course=course)
@@ -126,7 +130,7 @@ class AddCommentsView(View):
 
 class VideoPlayView(View):
     @staticmethod
-    def get(request,video_id):
+    def get(request, video_id):
         video = Video.objects.filter(id=int(video_id)).first()
         course = video.lesson.course
         course.students += 1
@@ -135,7 +139,7 @@ class VideoPlayView(View):
         # course = Course.objects.get(id=int(course_id))
         user_courses = UserCourse.objects.filter(course=course).filter(user=request.user)
         if not user_courses:
-            UserCourse.objects.create(user=request.user,course=course)
+            UserCourse.objects.create(user=request.user, course=course)
         user_ids = [i.get("user") for i in UserCourse.objects.filter(course=course).values("user")]
         all_user_courses = [i.get("course") for i in UserCourse.objects.filter(user_id__in=user_ids).values("course")]
         all_user_courses = list(set(all_user_courses))
@@ -146,5 +150,5 @@ class VideoPlayView(View):
             "course": course,
             "all_resources": all_resources,
             "relate_courses": relate_courses,
-            "video":video
+            "video": video
         })

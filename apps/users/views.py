@@ -249,6 +249,7 @@ class MyFavCourseView(LoginRequiredMixin, View):
 class MyMessageView(LoginRequiredMixin, View):
     def get(self, request):
         all_message = UserMessage.objects.filter(user=request.user.pk)
+        all_message.update(has_read=True)
         page = request.GET.get("page", 1)
         p = Paginator(all_message, 5, request=request)
         messages = p.page(page)

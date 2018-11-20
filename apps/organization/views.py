@@ -5,6 +5,7 @@ from django.db.models import Q
 
 from .models import CourseOrg, CityDict, Teacher
 from operation.models import UserFavorite
+from courses.models import Course
 from .forms import UserAskForm
 
 from pure_pagination import Paginator, EmptyPage, PageNotAnInteger
@@ -77,6 +78,8 @@ class OrgHomeView(View):
     @staticmethod
     def get(request, org_id):
         course_org = CourseOrg.objects.get(id=int(org_id))
+        course_org.click_nums += 1
+        course_org.save()
         # Course 有 course_org 外键,可以这样取外键对应的所有course
         all_courses = course_org.course_set.all()[:3]
         all_teachers = course_org.teacher_set.all()[:1]
@@ -103,7 +106,6 @@ class OrgCourseView(View):
         course_org = CourseOrg.objects.get(id=int(org_id))
         # Course 有 course_org 外键,可以这样取外键对应的所有course
         all_courses = course_org.course_set.all()
-
 
         has_fav = False
         if request.user.is_authenticated:
@@ -173,9 +175,36 @@ class AddFavView(View):
             exist_records = UserFavorite.objects.filter(user=request.user, fav_id=fav_id, fav_type=fav_type)
             if exist_records:
                 exist_records.delete()
+                if int(fav_type) == 1:
+                    course = Course.objects.get(id=int(fav_id))
+                    if course.fav_nums >=1:
+                        course.fav_nums -= 1
+                    course.save()
+                elif int(fav_type) == 2:
+                    course_org = CourseOrg.objects.get(id=int(fav_id))
+                    if course_org.fav_nums >= 1:
+                        course_org.fav_nums -= 1
+                    course_org.save()
+                elif int(fav_type) == 3:
+                    teacher = Teacher.objects.get(id=int(fav_id))
+                    if teacher.fav_nums >= 1:
+                        teacher.fav_nuns -= 1
+                    teacher.save()
                 return HttpResponse('{"status":"success","msg":"收藏"}', content_type='application/json')
             else:
                 UserFavorite.objects.create(user=request.user, fav_id=fav_id, fav_type=fav_type)
+                if int(fav_type) == 1:
+                    course = Course.objects.get(id=int(fav_id))
+                    course.fav_nums += 1
+                    course.save()
+                elif int(fav_type) == 2:
+                    course_org = CourseOrg.objects.get(id=int(fav_id))
+                    course_org.fav_nums += 1
+                    course_org.save()
+                elif int(fav_type) == 3:
+                    teacher = Teacher.objects.get(id=int(fav_id))
+                    teacher.fav_nuns += 1
+                    teacher.save()
                 return HttpResponse('{"status":"success","msg":"已收藏"}', content_type='application/json')
         else:
             return HttpResponse('{"status":"error","msg":"收藏出错"}', content_type='application/json')
