@@ -47,3 +47,6 @@ urlpatterns = [
     path('users/', include(('users.urls', 'users'), namespace="users")),
 
 ]
+
+handler404 = "users.views.page_not_found"
+handler500 = "users.views.page_error"
