@@ -52,3 +52,6 @@ class Banner(models.Model, MxModelUpdate):
     class Meta:
         verbose_name = "轮播图"
         verbose_name_plural = verbose_name
+
+    def __str__(self):
+        return self.title

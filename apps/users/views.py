@@ -10,7 +10,7 @@ from django.urls.base import reverse
 from django.http import HttpResponse, HttpResponseRedirect
 from pure_pagination import Paginator
 
-from .models import UserProfile, EmailVerifyRecord
+from .models import UserProfile, EmailVerifyRecord, Banner
 from .forms import LoginForm, RegisterForm, ForgetForm, ModifyPwdForm, UploadImageForm, UserInfoForm
 
 from utils.email_send import send_register_email
@@ -254,3 +254,16 @@ class MyMessageView(LoginRequiredMixin, View):
         p = Paginator(all_message, 5, request=request)
         messages = p.page(page)
         return render(request, 'usercenter-message.html', {"messages": messages})
+
+
+class IndexView(View):
+    def get(self, request):
+        all_banners = Banner.objects.filter().order_by("index")
+        courses = Course.objects.filter(is_banner=False)[:6]
+        bcourses = Course.objects.filter(is_banner=True)[:3]
+        course_orgs = CourseOrg.objects.filter()[:15]
+
+        return render(request, 'index.html', {"all_banners": all_banners,
+                                              "courses": courses,
+                                              "banner_courses": bcourses,
+                                              "course_orgs": course_orgs})

@@ -21,10 +21,12 @@ class Course(models.Model):
     image = models.ImageField(upload_to="courses/%Y/%m", verbose_name="封面图", null=True, blank=True)
     click_nums = models.IntegerField(default=0, verbose_name="点击量")
     category = models.CharField(max_length=20, verbose_name="课程类别", default="后端开发")
-    tag = models.CharField(max_length=15, verbose_name="课程标签", default="")
-    youneed_know = models.CharField(default="", max_length=300, verbose_name="课程须知")
-    teacher_tell = models.CharField(default="", max_length=300, verbose_name="老师告诉你")
+    tag = models.CharField(max_length=15, verbose_name="课程标签", default="", null=True, blank=True)
+    youneed_know = models.CharField(default="", max_length=300, verbose_name="课程须知", null=True, blank=True)
+    teacher_tell = models.CharField(default="", max_length=300, verbose_name="老师告诉你", null=True, blank=True)
     add_time = models.DateTimeField(default=datetime.now, verbose_name="添加时间")
+
+    is_banner = models.BooleanField(default=False, verbose_name="是否轮播图")
 
     class Meta:
         verbose_name = "课程"
