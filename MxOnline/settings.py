@@ -90,16 +90,29 @@ WSGI_APPLICATION = 'MxOnline.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': "mxonline",
+#         'USER': 'root',
+#         'PASSWORD': "password",
+#         # 'HOST': "116.196.98.152"
+#         'HOST': "127.0.0.1"
+#     }
+# }
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': "mxonline",
-        'USER': 'root',
-        'PASSWORD': "password",
+        'USER': 'zhangkun',
+        'PASSWORD': "zhangkunpw12306",
         # 'HOST': "116.196.98.152"
-        'HOST': "127.0.0.1"
+        'HOST': "154.8.219.34",
+        'PORT': "12306"
     }
 }
+
 
 # Password validation
 # https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators
@@ -136,7 +149,7 @@ USE_TZ = False
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"),)
+# STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"),)
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
@@ -150,6 +163,7 @@ EMAIL_FROM = "python_smtp_test@163.com"
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 
 PAGINATION_SETTINGS = {
