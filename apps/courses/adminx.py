@@ -10,6 +10,9 @@ class CourseAdmin(object):
                      "add_time"]
     list_filter = ["name", "desc", "detail", "degree", "learn_times", "students", "fav_nums", "image", "click_nums",
                    "add_time"]
+    ordering = ['-click_nums'] # 排序
+    readonly_fields = ['click_nums'] # 设置只读无法后台修改了就
+    exclude = ['fav_nums'] # 不显示，和readonly_fields冲突
 
 
 xadmin.site.register(Course, CourseAdmin)

@@ -17,7 +17,7 @@ from django.contrib import admin
 from django.urls import path, include, re_path
 from django.views.static import serve
 
-from MxOnline.settings import MEDIA_ROOT, STATIC_ROOT
+from MxOnline.settings import MEDIA_ROOT
 
 import xadmin
 
@@ -44,7 +44,7 @@ urlpatterns = [
     re_path('course/', include(('courses.urls', 'courses'), namespace="course")),
     re_path('teacher/', include(('organization.urls', 'organization'), namespace="teacher")),
     re_path(r'media/(?P<path>.*)', serve, {"document_root": MEDIA_ROOT}),  # 配置上传文件的访问处理函数
-    re_path(r'static/(?P<path>.*)', serve, {"document_root": STATIC_ROOT}),  # 自己管理静态文件
+    # re_path(r'static/(?P<path>.*)', serve, {"document_root": STATIC_ROOT}),  # 自己管理静态文件
     # 用户个人中心
     path('users/', include(('users.urls', 'users'), namespace="users")),
 
