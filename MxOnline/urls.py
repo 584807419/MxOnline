@@ -51,4 +51,4 @@ urlpatterns = [
 ]
 
 handler404 = 'users.views.page_not_found'
-# handler500 = "users.views.page_error"
+handler500 = "users.views.page_error"

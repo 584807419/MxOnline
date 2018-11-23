@@ -34,6 +34,11 @@ class Course(models.Model):
 
     def get_zj_nums(self):
         return self.lesson_set.all().count()
+    get_zj_nums.short_description = "章节数"
+
+    def go_to(self):
+        from django.utils.safestring import mark_safe
+        return mark_safe("<a href='http://www.devnav.win'>跳转</>")
 
     def get_course_lesson(self):
         return self.lesson_set.all()
@@ -43,6 +48,13 @@ class Course(models.Model):
 
     def __str__(self):
         return f"{self.name}"
+
+
+class BannerCourse(Course): # 同一model注册两个管理器
+    class Meta:
+        verbose_name = "轮播课程"
+        verbose_name_plural = verbose_name
+        proxy = True
 
 
 class Lesson(models.Model):
