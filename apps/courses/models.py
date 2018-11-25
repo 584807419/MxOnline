@@ -4,6 +4,8 @@ from django.db import models
 
 from organization.models import CourseOrg, Teacher
 
+from DjangoUeditor.models import UEditorField
+
 
 # Create your models here.
 
@@ -11,7 +13,10 @@ class Course(models.Model):
     course_org = models.ForeignKey(CourseOrg, verbose_name="课程机构", null=True, blank=True, on_delete=models.CASCADE)
     name = models.CharField(max_length=50, verbose_name="课程名称")
     desc = models.CharField(max_length=300, verbose_name="课程描述")
-    detail = models.TextField(verbose_name="课程详情")
+    detail = UEditorField(verbose_name="课程详情", width=600, height=300, imagePath="courses/ueditor",
+                          filePath="courses/ueditor",
+                          upload_settings={"imageMaxSize": 1204000},
+                          default="")
     teacher = models.ForeignKey(Teacher, verbose_name="讲师", null=True, blank=True, on_delete=models.CASCADE)
     degree = models.CharField(choices=(("1", "初级"), ("2", "中级"), ("3", "高级")), verbose_name="课程等级", default="1",
                               max_length=50)
@@ -34,6 +39,7 @@ class Course(models.Model):
 
     def get_zj_nums(self):
         return self.lesson_set.all().count()
+
     get_zj_nums.short_description = "章节数"
 
     def go_to(self):
@@ -50,7 +56,7 @@ class Course(models.Model):
         return f"{self.name}"
 
 
-class BannerCourse(Course): # 同一model注册两个管理器
+class BannerCourse(Course):  # 同一model注册两个管理器
     class Meta:
         verbose_name = "轮播课程"
         verbose_name_plural = verbose_name

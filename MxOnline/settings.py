@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'captcha',
     'utils',
     'pure_pagination',
+    'DjangoUeditor'
 ]
 
 AUTH_USER_MODEL = "users.UserProfile"  # 扩展了默认用户类
