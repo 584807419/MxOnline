@@ -27,8 +27,9 @@ class CourseAdmin(object):
     inlines = [LessinInLine, CourseResourceInline]  # 课程编辑后台添加章节信息,嵌套只能做一层
     list_editable = ['degree', 'desc']
     refresh_times = [3, 5]  # 定时刷新页面显示数据
+    style_fields = {"detail": "ueditor"} # 指定detail字段的样式是ueditor,然后插件中对ueditor这个样式进行识别
 
-    def save_models(self): # 重载save_models 方法,新增和修改都会走这个接口
+    def save_models(self):  # 重载save_models 方法,新增和修改都会走这个接口
         # 在保存课程的时候统计课程机构の课程数
         obj = self.new_obj
         obj.save()
@@ -36,7 +37,6 @@ class CourseAdmin(object):
             course_org = obj.course_org
             course_org.course_nums = Course.objects.filter(course_org=course_org).count()
             course_org.save()
-
 
 
 xadmin.site.register(Course, CourseAdmin)
