@@ -12,8 +12,8 @@ elif VERSION[0:2] > (2, 0):
     from django.urls import path, include, re_path
 
     urlpatterns = [
-        path(r'^controller/$', get_ueditor_controller),
-    ]
+                   path('controller/', get_ueditor_controller),
+                   ]
 else:
     from django.conf.urls.defaults import patterns, url
 
